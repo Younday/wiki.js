@@ -5,17 +5,13 @@ metadata:
   labels:
     app: wikijs
 data:
-  dbType: postgres
-  dbHost: postgres
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: wikijs-secret
-data:
-  user: cG9zdGdyZXNhZG1pbgo=
-  password: YWRtaW4xMjMK
-
+  PORT: "3000"
+  DB_TYPE: postgres
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_USER: postgresadmin
+  DB_PASS: admin123
+  DB_NAME: postgresdb
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -34,34 +30,9 @@ spec:
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 3000
-          env:
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_TYPE
-              valueFrom:
-                configMapKeyRef:
-                  name: wikijs-config
-                  key: dbType
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: wikijs-config
-                  key: dbHost
-            - name: DB_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: db
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: user
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: password
+          envFrom:
+            - configMapRef:
+                name: wikijs-config
 
 ---
 apiVersion: v1
@@ -71,9 +42,10 @@ metadata:
   labels:
     name: wikijs
 spec:
+  type: NodePort
   ports:
-    - name: pgql
-      port: 9000
+    - name: wikijs
+      port: 3000
       targetPort: 3000
       protocol: TCP
   selector:
