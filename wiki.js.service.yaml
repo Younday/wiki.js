@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wikijs
+  labels:
+    name: wikijs
+spec:
+  type: ClusterIP
+  ports:
+    - name: wikijs
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: wikijs

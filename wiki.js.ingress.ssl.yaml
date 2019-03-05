@@ -13,3 +13,7 @@ spec:
             backend:
               serviceName: wikijs
               servicePort: 3000
+  tls:
+  - hosts:
+    - "www.conceptmatcher.com"
+    secretName: conceptmatcher-com-tls
