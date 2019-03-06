@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wikijs
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: wikijs
+    spec:
+      containers:
+        - name: wikijs
+          image: requarks/wiki:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: config-volume
+              mountPath: /var/wiki
+          env:
+            - name: WIKI_ADMIN_EMAIL
+              value: jun.wu@iherb.com
+            # - name: MONGO_URI
+            #   value: mongodb://mongodb-service-master,mongodb-service-replica-1,mongodb-service-replica-2:27017/wikijsv1?replicaSet=rs0
+      volumes:
+         - name: config-volume
+           configMap:
+            name: config.yml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wikijs
+  labels:
+    name: wikijs
+spec:
+  type: ClusterIP
+  ports:
+    - name: wikijs
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: wikijs

@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.18.0 (06a2e56)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: wikidb
+  name: wikidb
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: wikidb
+    spec:
+      containers:
+      - args:
+        - --smallfiles
+        - --bind_ip
+        - ::,0.0.0.0
+        env:
+        - name: MONGO_LOG_DIR
+          value: /dev/null
+        image: mongo:3
+        name: wikidb
+        resources: {}
+        volumeMounts:
+        - mountPath: /data/db
+          name: wikidb-claim0
+      restartPolicy: Always
+      volumes:
+      - name: wikidb-claim0
+        persistentVolumeClaim:
+          claimName: wikidb-claim0
+status: {}

@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: wikijs-ingress
+  name: wikijs-ingress-ssl
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:

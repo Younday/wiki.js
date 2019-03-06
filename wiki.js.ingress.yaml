@@ -6,10 +6,10 @@ metadata:
     ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: wikijs.conceptmatcher.com
+    - host: wikijs.myhost.io
       http:
         paths:
           - path: /
             backend:
               serviceName: wikijs
-              servicePort: 3000
+              servicePort: 80
